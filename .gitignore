@@ -1,6 +1,6 @@
-db_connector/__pycache__/
-page_viewer/__pycache__/
-ATON/__pycache__/
-api/__pycache__/
+db_connector/__pycache__/*
+page_viewer/__pycache__/*
+ATON/__pycache__/*
+api/__pycache__/*
 env/
 db.sqlite3
