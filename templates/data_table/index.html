@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Clients table</title>
+    <script>
+      const url_params = new URLSearchParams(window.location.search);
+      const responsible_user = url_params.get("r");
+
+      let xhr = new XMLHttpRequest();
+
+      xhr.open("GET", "api/request-table/?r=" + responsible_user);
+
+      xhr.responseType = "json";
+      xhr.onload = () => {
+        let clients_table = document.getElementById("clients-table");
+        let data = xhr.response.data;
+        let data_array = JSON.parse(data);
+        console.log(data_array);
+
+        data_array.forEach((el) => {
+          let status = 0;
+          switch (el.status) {
+            case "Не в работе":
+              status = 1;
+              break;
+            case "В работе":
+              status = 2;
+              break;
+            case "Отказ":
+              status = 3;
+              break;
+            case "Сделка закрыта":
+              status = 4;
+              break;
+          }
+          clients_table.innerHTML += `
+            <tr>
+                <th>${el.account_number}</th>
+                <th class="last_name">${el.last_name}</th>
+                <th class="first_name">${el.first_name}</th>
+                <th class="middle_name">${el.middle_name}</th>
+                <th>${el.date_of_birth}</th>
+                <th>${el.tin}</th>
+                <th>${el.responsible_user}</th>
+                <th>
+                    <select class="status-selector">
+                        <option value="Не в работе" ${
+                          status == 1 ? "selected" : ""
+                        }>Не в работе</option>
+                        <option value="В работе" ${
+                          status == 2 ? "selected" : ""
+                        }>В работе</option>
+                        <option value="Отказ" ${
+                          status == 3 ? "selected" : ""
+                        }>Отказ</option>
+                        <option value="Сделка закрыта" ${
+                          status == 4 ? "selected" : ""
+                        }>Сделка закрыта</option>
+                    </select>
+                </th>
+            </tr>
+            `;
+        });
+
+        let status_selectors =
+          document.getElementsByClassName("status-selector");
+        Array.prototype.forEach.call(status_selectors, (selector) => {
+          console.log(selector);
+          selector.onchange = () => {
+            let change_status_request = new XMLHttpRequest();
+            change_status_request.open("POST", "/api/set-status/");
+
+            let params = {
+              status: selector.value,
+              first_name:
+                selector.parentElement.parentElement.querySelector(
+                  ".first_name"
+                ).innerHTML,
+              last_name:
+                selector.parentElement.parentElement.querySelector(".last_name")
+                  .innerHTML,
+              middle_name:
+                selector.parentElement.parentElement.querySelector(
+                  ".middle_name"
+                ).innerHTML,
+            };
+
+            var form_data = new FormData();
+            for (var key in params) {
+              form_data.append(key, params[key]);
+            }
+
+            change_status_request.send(form_data);
+          };
+        });
+      };
+
+      document.addEventListener("DOMContentLoaded", () => {
+        xhr.send();
+      });
+    </script>
+  </head>
+  <body>
+    <table id="clients-table">
+      <tr>
+        <th>Номер счета</th>
+        <th>Фамилия</th>
+        <th>Имя</th>
+        <th>Отчество</th>
+        <th>Дата рождения</th>
+        <th>ИНН</th>
+        <th>ФИО ответственного</th>
+        <th>Статус</th>
+      </tr>
+    </table>
+  </body>
+</html>

@@ -1,6 +1,10 @@
 db_connector/__pycache__/*
+db_connector/migrations/__pycache__/
 page_viewer/__pycache__/*
+page_viewer/migrations/__pycache__/*
 ATON/__pycache__/*
 api/__pycache__/*
+api/migrations/__pycache__/
 env/
+__pycache__/*
 db.sqlite3

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>You'll be redirected to login page...</title>
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", () => {
+        let secondsCounter = document.querySelector("span#secondsCounter");
+        let count = 5;
+        setInterval(() => {
+          count--;
+          secondsCounter.innerHTML = count.toString();
+          console.log("test");
+          if (count == 0) {
+            window.location.assign("/login");
+          }
+        }, 1000);
+      });
+    </script>
+  </head>
+  <body>
+    <h1>
+      We'll redirect you to login page in
+      <span id="secondsCounter">5</span> seconds...
+    </h1>
+    If nothing happend - click on <a href="/login">this link</a>
+  </body>
+</html>
